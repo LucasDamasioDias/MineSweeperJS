@@ -1,0 +1,353 @@
+/* Reset default margin and padding */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../assets/sprites/Background.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+/* Main container to center the game elements */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 100px;
+}
+
+/* Controls container */
+#controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+    margin-bottom: 20px;
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* Style for the "Number of Bombs" label */
+#controls label {
+    font-size: 32px;
+    color: #ffcc00;
+    text-shadow: 2px 2px #000;
+    margin-bottom: 10px;
+    padding-right: 6px;
+}
+
+/* Input field styling for bomb count */
+#controls input {
+    font-size: 28px;
+    padding: 5px;
+    width: 60px;
+    text-align: center;
+    border: 2px solid #000;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    margin-right: 10px;
+}
+
+/* Button styling for updating bombs */
+#controls button {
+    font-size: 18px;
+    padding: 10px 20px;
+    border: 2px solid #000;
+    border-radius: 5px;
+    background-color: #d9534f;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+    margin-top: 2px;
+}
+
+/* Button hover effect */
+#controls button:hover {
+    background-color: #c9302c;
+}
+
+/* Volume slider container */
+.volume-slider {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-family: 'Press Start 2P', cursive;
+    color: #ffcc00;
+    font-size: 32px;
+    text-shadow: 2px 2px #000;
+    padding-top: 9px;
+}
+
+/* Style for the volume slider */
+.volume-slider input {
+    width: 150px;
+    margin-left: 10px;
+    accent-color: #ffffff;
+    background-color: #333;
+    border: 2px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Game field styling to set grid layout */
+#gameField {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    grid-template-rows: repeat(10, 40px);
+    gap: 2px;
+}
+
+/* Default cell styling */
+.cell {
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/default.png');
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Bomb cell styling */
+.bomb {
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/mine.png');
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Styling for empty cells based on the number of adjacent bombs */
+
+.empty0{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/empty0.png'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.empty1{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/empty1.png'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.empty2{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/empty2.png'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.empty3{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/empty3.png'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.empty4{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/empty4.png'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.empty5{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/empty5.png'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.empty6{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/6.png'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.empty7{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/empty7.png'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.empty8{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/empty8.png'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Animation for bomb explosion */
+@keyframes explosion {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 69, 0, 0.5), 0 0 10px rgba(255, 165, 0, 0.5);
+    }
+    50% {
+        transform: scale(1.5);
+        box-shadow: 0 0 15px rgba(255, 69, 0, 1), 0 0 30px rgba(255, 165, 0, 1);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 69, 0, 0.5), 0 0 10px rgba(255, 165, 0, 0.5);
+    }
+}
+
+/* Styling for the bomb after the explosion */
+.bomb {
+    animation: explosion 0.5s ease-out;
+    background-color: red;
+    border-radius: 50%;
+}
+
+/* Media query for tablets and mobile devices */
+@media screen and (max-width: 768px) {
+
+    /* Adjust the main container padding to fit smaller screens */
+    .main-container {
+        padding-bottom: 50px;
+    }
+
+    /* Adjust the controls container to stack elements vertically */
+    #controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Resize the "Number of Bombs" label for better readability on smaller screens */
+    #controls label {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+
+    /* Resize the input field for bomb count */
+    #controls input {
+        font-size: 20px;
+        padding: 5px;
+        width: 50px;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    /* Resize the button for better touch interaction */
+    #controls button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+
+    /* Adjust the volume slider to fit on smaller screens */
+    .volume-slider {
+        top: 10px;
+        left: 10px;
+        font-size: 24px;
+    }
+
+    /* Resize the volume slider input */
+    .volume-slider input {
+        width: 120px;
+    }
+
+    /* Adjust the game field grid for smaller screens */
+    #gameField {
+        grid-template-columns: repeat(10, 30px);
+        grid-template-rows: repeat(10, 30px);
+    }
+
+    /* Resize the cells for smaller screens */
+    .cell, .bomb, .empty0, .empty1, .empty2, .empty3, .empty4, .empty5, .empty6, .empty7, .empty8 {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* Media query for very small mobile devices */
+@media screen and (max-width: 480px) {
+
+    /* Further adjust the controls for very small screens */
+    #controls label {
+        font-size: 20px;
+    }
+
+    #controls input {
+        font-size: 18px;
+        width: 40px;
+    }
+
+    #controls button {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    /* Further adjust the volume slider for very small screens */
+    .volume-slider {
+        font-size: 20px;
+    }
+
+    .volume-slider input {
+        width: 100px;
+    }
+
+    /* Further adjust the game field grid for very small screens */
+    #gameField {
+        grid-template-columns: repeat(10, 25px);
+        grid-template-rows: repeat(10, 25px);
+    }
+
+    /* Resize the cells even smaller for very small screens */
+    .cell, .bomb, .empty0, .empty1, .empty2, .empty3, .empty4, .empty5, .empty6, .empty7, .empty8 {
+        width: 25px;
+        height: 25px;
+    }
+}
