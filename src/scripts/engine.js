@@ -78,7 +78,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 cell.dataset.row = i;
                 cell.dataset.col = j;
 
+                // Left-click event listener for cell
                 cell.addEventListener('click', handleClick);
+
+                // Right-click event listener for cell
+                cell.addEventListener('contextmenu', function(e) {
+                    e.preventDefault(); // Prevent the default right-click menu from appearing
+                    toggleFlag(cell); // Call function to toggle the flag
+                });
 
                 gameField.appendChild(cell);
             }
@@ -199,13 +206,28 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Function to toggle the flag on right-click
+    function toggleFlag(cell) {
+        // If the cell is not revealed
+        if (!cell.classList.contains('revealed')) {
+            if (cell.classList.contains('flag')) {
+                cell.classList.remove('flag'); // Remove the flag
+            } else {
+                cell.classList.add('flag'); // Add the flag
+            }
+        }
+    }
+
     // Function to reveal all bombs at the end of the game
     function revealBombs() {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 if (field[i][j] === 'B') {
                     const cell = document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
-                    if (cell) cell.classList.add('bomb');
+                    if (cell) {
+                           cell.classList.remove('flag'); 
+                           cell.classList.add('bomb');
+                  }
                 }
             }
         }

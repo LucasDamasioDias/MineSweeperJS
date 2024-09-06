@@ -229,6 +229,17 @@ body, html {
     cursor: pointer;
 }
 
+.flag{
+    width: 40px;
+    height: 40px;
+    background-image: url('../assets/sprites/flag.jpg'); 
+    background-size: cover; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
 /* Animation for bomb explosion */
 @keyframes explosion {
     0% {
