@@ -13,12 +13,114 @@ body, html {
     background-repeat: no-repeat;
 }
 
-/* Main container to center the game elements */
-.main-container {
+
+.menu {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    padding-bottom: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);    
+    padding: 20px;
+    padding-top: 50px;
+    border-radius: 10px;
+}
+
+
+.menu button {
+    font-family: 'Press Start 2P', cursive; 
+    font-size: 18px;
+    margin: 10px 0;
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #d9534f;
+    border: 2px solid #fff; 
+    border-radius: 5px; 
+    cursor: pointer;
+    width: 200px; 
+ }
+
+.menu button:hover {
+    background-color: #c9302c;
+}
+
+.menu button:active {
+    background-color: #777; 
+    transform: scale(1);
+}
+
+
+.instructions {
+    font-family: 'Press Start 2P', cursive; 
+    font-size: 18px; 
+    margin: 10px 0;
+    padding: 10px 20px;
+    cursor: pointer; 
+    width: 200px; 
+    text-align: center; 
+    height: auto; 
+    
+}
+
+
+
+.lang-btn {
+    font-family: 'Press Start 2P', cursive; 
+    font-size: 18px;
+    margin: 10px 0;
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #d9534f; 
+    border: 2px solid #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+    text-align: center;
+}
+
+
+.lang-btn:hover {
+    background-color: #c9302c;
+}
+
+
+.lang-btn:active {
+    background-color: #777;
+    transform: scale(1);
+}
+
+p {
+    font-family: 'Press Start 2P', cursive; 
+    color: #eead2d; 
+    font-size: 18px; 
+    line-height: 1.5; 
+    text-align: justify;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.7); 
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    max-width: 80%; 
+    margin: 20px auto; 
+    margin-top: -70px;
+    height: auto; 
+    overflow: hidden;
+    word-wrap: break-word; 
+   
+}
+
+/* Main container to center the game elements */
+.tools {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    padding-left: 400px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 /* Controls container */
@@ -56,6 +158,7 @@ body, html {
 #controls button {
     font-size: 18px;
     padding: 10px 20px;
+    padding-bottom: 11px;
     border: 2px solid #000;
     border-radius: 5px;
     background-color: #d9534f;
@@ -67,6 +170,26 @@ body, html {
 
 /* Button hover effect */
 #controls button:hover {
+    background-color: #c9302c;
+}
+
+#backButton {
+   
+    font-family: 'Press Start 2P', cursive;
+    font-size: 18px;
+    color: #fff; 
+    background-color: #d9534f; 
+    border: 2px solid #000;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    transition: background-color 0.3s ease;
+}
+
+#backButton:hover {
     background-color: #c9302c;
 }
 
@@ -97,7 +220,7 @@ body, html {
 }
 
 /* Game field styling to set grid layout */
-#gameField {
+.gameField {
     display: grid;
     grid-template-columns: repeat(10, 40px);
     grid-template-rows: repeat(10, 40px);
@@ -238,6 +361,10 @@ body, html {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+.hidden {
+    display: none;
 }
 
 /* Animation for bomb explosion */

@@ -1,58 +1,152 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Dimensions of the game field
-    const rows = 10;
-    const cols = 10;
-    let totalBombs;
+    const rows = 10; // Number of rows in the game field
+    const cols = 10; // Number of columns in the game field
+    let totalBombs; // Total number of bombs to be placed in the game field
 
-    // Get references to DOM elements
-    const gameField = document.getElementById("gameField");
-    const bombInput = document.getElementById("bombInput");
-    const updateBombs = document.getElementById("updateBombs");
-    const clickSound = document.getElementById("clickSound");
-    const explodeSound = document.getElementById("explodeSound");
-    const winSound = document.getElementById("winSound");
-    const loseSound = document.getElementById("loseSound");
-    const bkSound = document.getElementById("bk");
-    const volumeControl = document.getElementById("volumeControl"); // Volume control slider
+    const backButton = document.getElementById("backButton"); // Back button in the menu
+    const menu = document.querySelector('.menu'); // Menu element
+    const tools = document.querySelector('.tools'); // Tools element (hidden by default)
+    let gameField = document.querySelector('.gameField'); // Game field element
+    const bombInput = document.getElementById("bombInput"); // Input for the number of bombs
+    const updateBombs = document.getElementById("updateBombs"); // Button to update the number of bombs
+    const clickSound = document.getElementById("clickSound"); // Sound for clicking a cell
+    const explodeSound = document.getElementById("explodeSound"); // Sound for exploding a bomb
+    const winSound = document.getElementById("winSound"); // Sound for winning the game
+    const loseSound = document.getElementById("loseSound"); // Sound for losing the game
+    const bkSound = document.getElementById("bk"); // Background music sound
+    const volumeControl = document.getElementById("volumeControl"); // Volume control input
 
+    let field = []; // 2D array to represent the game field
+    let nonBombCells; // Number of cells that are not bombs
+    let revealedCells = 0; // Counter for revealed cells
 
-    let field = [];
-    let nonBombCells;
-    let revealedCells = 0;
+    playBackgroundMusic(); // Start playing background music
+    setVolume(volumeControl.value); // Set the volume based on the control's current value
 
-    // Play background music in a loop
-    playBackgroundMusic();
-
-   // Set initial volume
-    setVolume(volumeControl.value);
-
-    // Event listener to update the volume
     volumeControl.addEventListener('input', function() {
-        setVolume(volumeControl.value);
+        setVolume(volumeControl.value); // Update the volume when the slider is moved
     });
 
-    // Initialize the game field
-    createField();
+     function setupMenu() {
+        // Clear the menu to avoid overlapping elements
+        menu.innerHTML = ''; 
+        // Create the main menu buttons
+        menu.innerHTML = `
+            <button id="arcadeButton">Arcade</button> 
+            <button id="historyButton">History Mode</button>
+            <button id="twoPlayersButton">Two Players</button>
+            <button id="instructionsBtn">Instructions</button>
+        `;
 
-    // Event listener to update the number of bombs
+        const buttons = menu.querySelectorAll('button'); // Select all buttons in the menu
+
+        const arcadeButton = document.getElementById("arcadeButton"); // Arcade mode button
+        arcadeButton.addEventListener("click", function() {
+            tools.classList.remove('hidden'); // Show tools when arcade mode is selected
+            buttons.forEach(button => button.classList.add('hidden'));  // Hide all menu buttons
+            menu.classList.remove('menu'); // Change the menu class to game field
+            menu.classList.add('gameField');
+            gameField = menu; // Update the game field reference
+            createField(); // Create the game field
+        });
+
+         // Back button functionality
+         backButton.addEventListener("click", function() {
+            tools.classList.add('hidden'); // Hide tools when going back
+            clearInstructions(); // Clear instructions when going back
+            buttons.forEach(button => button.classList.remove('hidden')); // Show all menu buttons
+            menu.classList.remove('gameField'); // Change class back to menu
+            menu.classList.add('menu');
+            gameField.innerHTML = ''; // Clear the game field display
+            setupMenu(); // Reset the menu
+        });
+
+function clearInstructions() {
+     menu.classList.remove("instructions"); // Remove the 'instructions' class from the menu element 
+     const langButtons = menu.querySelectorAll('.lang-btn'); // Remove elements with the class 'lang-btn' from the menu
+     langButtons.forEach(button => button.remove());    
+     const portugueseBtn = menu.querySelector('button.lang-btn'); // Remove 'portugueseBtn' and 'englishBtn' from the menu
+     const englishBtn = menu.querySelector('button.lang-btn');
+     if (portugueseBtn) portugueseBtn.remove();
+     if (englishBtn) englishBtn.remove();   
+    const paragraphs = menu.querySelectorAll('p'); // Remove <p> elements from the menu
+    paragraphs.forEach(paragraph => paragraph.remove());    
+    const instructionParagraphs = menu.querySelectorAll('.paragraph'); // Remove elements with class 'paragraph' from the menu
+    instructionParagraphs.forEach(p => p.remove());
+}
+
+       // Instructions button functionality
+        const instructionsBtn = document.getElementById("instructionsBtn");
+        instructionsBtn.addEventListener("click", () => {
+            menu.classList.remove('menu');
+            buttons.forEach(button => button.classList.add('hidden'));
+            menu.classList.add("instructions");
+
+            const portugueseBtn = document.createElement("button");
+            portugueseBtn.innerText = "Português";
+            portugueseBtn.classList.add("lang-btn");
+
+            const englishBtn = document.createElement("button");
+            englishBtn.innerText = "English";
+            englishBtn.classList.add("lang-btn");
+
+            menu.appendChild(portugueseBtn);
+            menu.appendChild(englishBtn);
+
+            portugueseBtn.addEventListener('click', function() {
+                const langButtons = document.querySelectorAll('.lang-btn');
+                langButtons.forEach(button => button.remove());
+                menu.classList.remove('instructions');
+                
+                const instructionsText = `Selecione um quadrado, se for uma mina você perdeu, uma numeração representa a quantidade de minas adjacentes ao quadrado clicado (o que inclui diagonais). Use o botão direito para colocar ou retirar bandeiras para ajudar a se orientar. O objetivo é descobrir onde estão todas as minas em diferentes modos de jogo.
+
+    Modo Arcade = Selecione a quantidade de minas e tente terminar o campo no menor tempo possível.
+
+    Modo História = Um divertido modo com dificuldade crescente e uma história envolvente.
+
+    Modo Dois Jogadores = O primeiro jogador escolhe quantas minas terá o campo. A quantidade de espaços revelados será acrescida à pontuação. Ao terminar sua tentativa de conclusão do campo é a vez do segundo jogador. 
+    Em caso de um jogador "explodir" e o outro não, o jogador que concluiu o campo vence. Em caso de ambos os jogadores "explodirem", ganha quem tiver a maior pontuação. Se ambos os jogadores concluírem o campo, a partida reinicia com o segundo jogador escolhendo a quantidade de bombas.`;
+                const paragraph = document.createElement('p');
+                paragraph.innerText = instructionsText;
+                menu.appendChild(paragraph);
+            });
+
+            englishBtn.addEventListener('click', function() {
+                const langButtons = document.querySelectorAll('.lang-btn');
+                langButtons.forEach(button => button.remove());
+                menu.classList.remove('instructions');
+
+                const instructionsText = `Select a square, if it's a mine you missed it, a number represents the number of mines adjacent to the clicked square (which includes diagonals). Use the right button to place or remove flags to help guide you. The goal is to find out where all the mines are in different game modes.
+
+    Arcade Mode = Select the number of mines and try to finish the field in the shortest time possible.
+
+    Story Mode = A fun mode with increasing difficulty and an engaging story.
+
+    Two Player Mode = The first player chooses how many mines the field will have. The number of spaces revealed will be added to the score. When you finish your attempt to complete the field, it is the second player's turn. In case one player "explode" and the other doesn't, the player who completed the field wins. If both players "explode", the one with the highest score wins. If both players complete the field, the game restarts with the second player choosing the number of bombs.`;
+                const paragraph = document.createElement('p');
+                paragraph.innerText = instructionsText;
+                menu.appendChild(paragraph);
+            });
+        });
+    }
+
     updateBombs.addEventListener('click', function() {
         totalBombs = parseInt(bombInput.value);
         if (isNaN(totalBombs) || totalBombs < 1 || totalBombs >= rows * cols) {
             alert(`Please enter a number between 1 and ${rows * cols - 1}`);
             return;
         }
-        nonBombCells = rows * cols - totalBombs; // Update the number of non-bomb cells
-        revealedCells = 0; // Reset the revealed cells counter
+        nonBombCells = rows * cols - totalBombs;
+        revealedCells = 0;
         createField();
     });
 
-     function playBackgroundMusic() {
-        bkSound.loop = true;  // Enable looping
-        bkSound.play();       // Start playing the music
+    function playBackgroundMusic() {
+        bkSound.loop = true;
+        bkSound.play();
     }
-   
+
     function setVolume(volume) {
-        // Set the volume for all sounds
         clickSound.volume = volume;
         explodeSound.volume = volume;
         winSound.volume = volume;
@@ -60,17 +154,12 @@ document.addEventListener("DOMContentLoaded", function() {
         bkSound.volume = volume;
     }
 
-    // Function to create the game field
     function createField() {
-        gameField.innerHTML = ''; // Clear the field before creating a new one
-
-        // Initialize the game field with zeroes
+        gameField.innerHTML = '';
         field = Array.from({ length: rows }, () => Array(cols).fill(0));
+        placeBombs();
+        updateCellCounts();
 
-        placeBombs(); // Place bombs in the field
-        updateCellCounts(); // Update the number of adjacent bombs for each cell
-
-        // Create and add cells to the game field
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 const cell = document.createElement('div');
@@ -78,13 +167,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 cell.dataset.row = i;
                 cell.dataset.col = j;
 
-                // Left-click event listener for cell
                 cell.addEventListener('click', handleClick);
-
-                // Right-click event listener for cell
                 cell.addEventListener('contextmenu', function(e) {
-                    e.preventDefault(); // Prevent the default right-click menu from appearing
-                    toggleFlag(cell); // Call function to toggle the flag
+                    e.preventDefault();
+                    toggleFlag(cell);
                 });
 
                 gameField.appendChild(cell);
@@ -92,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Function to randomly place bombs in the field
     function placeBombs() {
         let bombsPlaced = 0;
         while (bombsPlaced < totalBombs) {
@@ -106,7 +191,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Function to update the number of adjacent bombs for each cell
     function updateCellCounts() {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
@@ -117,7 +201,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Function to count the number of bombs adjacent to a given cell
     function countAdjacentBombs(row, col) {
         let count = 0;
         for (let i = row - 1; i <= row + 1; i++) {
@@ -130,75 +213,65 @@ document.addEventListener("DOMContentLoaded", function() {
         return count;
     }
 
-    // Function to handle cell clicks
     function handleClick(event) {
         const cell = event.target;
         const row = cell.dataset.row;
         const col = cell.dataset.col;
 
-        if (cell.classList.contains('revealed')) return; // Do nothing if the cell is already revealed
+        if (cell.classList.contains('revealed')) return;
 
         if (field[row][col] === 'B') {
-            playExplodeSound(); // Play explosion sound
-            revealBombs(); // Reveal all bombs
-            playLoseSound(); // Play lose sound
+            playExplodeSound();
+            revealBombs();
+            playLoseSound();
             setTimeout(() => {
                 if (confirm("Game Over! Do you want to restart the game?")) {
-                    restartGame(); // Restart the game
+                    restartGame();
                 }
-            }, 500); // Delay before restarting the game
+            }, 500);
         } else {
             const bombCount = field[row][col];
-            updateCellClass(cell, bombCount); // Update cell class based on bomb count
-            playClickSound(); // Play click sound
-            cell.classList.add('revealed'); // Mark the cell as revealed
+            updateCellClass(cell, bombCount);
+            playClickSound();
+            cell.classList.add('revealed');
 
             revealedCells++;
-            if (bombCount === 0) flood(row, col); // Flood if the cell is empty
+            if (bombCount === 0) flood(row, col);
 
             if (revealedCells === nonBombCells) {
-                playWinSound(); // Play win sound
+                playWinSound();
                 setTimeout(() => {
                     alert("Congratulations! You won!");
-                    restartGame(); // Restart the game
-                }, 500); // Delay before restarting the game
+                    restartGame();
+                }, 500);
             }
         }
     }
 
-    // Function to update the cell's class based on the number of adjacent bombs
     function updateCellClass(cell, count) {
-        cell.classList.remove('cell'); 
-
-        // Add class based on the number of adjacent bombs
-        const className = `empty${count}`;
+        cell.classList.remove('cell');
+        const className = `empty${count}`; 
         cell.classList.add(className);
 
-        // If the cell is empty, flood adjacent cells
         if (count === 0) flood(cell.dataset.row, cell.dataset.col);
     }
 
-    // Recursive function to flood-fill empty cells
     function flood(row, col) {
         row = parseInt(row);
         col = parseInt(col);
 
         for (let i = row - 1; i <= row + 1; i++) {
             for (let j = col - 1; j <= col + 1; j++) {
-                // Check if the cell is within field bounds
                 if (i >= 0 && i < rows && j >= 0 && j < cols) {
                     const adjacentCell = document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
 
-                    // Check if the cell exists and hasn't been revealed
                     if (adjacentCell && !adjacentCell.classList.contains('revealed')) {
                         const bombCount = field[i][j];
-
                         if (bombCount === 0) {
-                            // If the cell is empty, apply class and call flood recursively
                             updateCellClass(adjacentCell, 0);
                             adjacentCell.classList.add('revealed');
                             revealedCells++;
-                            flood(i, j); // Recursive flood
+                            flood(i, j);
                         }
                     }
                 }
@@ -206,54 +279,51 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Function to toggle the flag on right-click
     function toggleFlag(cell) {
-        // If the cell is not revealed
         if (!cell.classList.contains('revealed')) {
             if (cell.classList.contains('flag')) {
-                cell.classList.remove('flag'); // Remove the flag
+                cell.classList.remove('flag');
             } else {
-                cell.classList.add('flag'); // Add the flag
+                cell.classList.add('flag');
             }
         }
     }
 
-    // Function to reveal all bombs at the end of the game
     function revealBombs() {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 if (field[i][j] === 'B') {
                     const cell = document.querySelector(`.cell[data-row="${i}"][data-col="${j}"]`);
-                    if (cell) {
-                           cell.classList.remove('flag'); 
-                           cell.classList.add('bomb');
-                  }
+                    cell.classList.add('bomb');
                 }
             }
         }
     }
 
-    // Functions to play sound effects
+    function restartGame() {
+        createField();
+        revealedCells = 0;
+    }
+
     function playClickSound() {
+        clickSound.currentTime = 0;
         clickSound.play();
     }
 
     function playExplodeSound() {
+        explodeSound.currentTime = 0;
         explodeSound.play();
     }
 
-    function playLoseSound() {
-        loseSound.play();
-    }
-
     function playWinSound() {
+        winSound.currentTime = 0;
         winSound.play();
     }
 
-    // Function to restart the game
-    function restartGame() {
-        gameField.innerHTML = '';
-        revealedCells = 0; 
-        createField();
+    function playLoseSound() {
+        loseSound.currentTime = 0;
+        loseSound.play();
     }
+
+    setupMenu();
 });
